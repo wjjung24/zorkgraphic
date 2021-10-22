@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.resizable = false;
 		config.title = "Zork";
 		config.width = 1080;
-		config.height = 720;
+		config.height = 590;
 		new LwjglApplication(new Zork(), config);
 	}
 }

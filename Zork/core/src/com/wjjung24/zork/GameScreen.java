@@ -20,7 +20,7 @@ public class GameScreen implements Screen{
 
     mapper mappingAssistant = new mapper();
     SpriteBatch batch = new SpriteBatch();
-    Viewport viewport = new FitViewport(1080, 720);
+    Viewport viewport = new FitViewport(1080, 590);
     TextField console;
     Stage stage;
     public String direction = "";
@@ -30,12 +30,18 @@ public class GameScreen implements Screen{
         console = new TextField("", skin);
         stage = new Stage(viewport);
         console.setPosition(0, 0);
+        console.setSize(799, 50);
         stage.addActor(console);
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ENTER) {
                     direction=console.getText();
+                    if (mapper.check(direction)){
+                        mapper.update(direction);
+                    }
+                    console.setText("");
+                    direction = "";
                 }
                 return false;
             }
@@ -56,7 +62,7 @@ public class GameScreen implements Screen{
         stage.draw();
         stage.setKeyboardFocus(console);
         batch.begin();
-        batch.draw(mappingAssistant.drawmap(), 0,180);
+        batch.draw(mappingAssistant.drawmap(), 0,50);
 
         batch.end();
         // TODO Auto-generated method stub
