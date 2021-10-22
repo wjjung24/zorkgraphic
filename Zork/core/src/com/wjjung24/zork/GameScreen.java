@@ -11,13 +11,24 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen{
 
     mapper mappingAssistant = new mapper();
     SpriteBatch batch = new SpriteBatch();
-    Texture textbox = new Texture("MiscBar/Textbox3.png");
-    
+    Viewport viewport = new FitViewport(1080, 720);
+    TextField console;
+    Stage stage;
+
+    public GameScreen(){
+        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        console = new TextField("", skin);
+        stage = new Stage(viewport);
+        console.setPosition(0, 0);
+        stage.addActor(console);
+        Gdx.input.setInputProcessor(stage);
+    }
     @Override
     public void show() {
         // TODO Auto-generated method stub
@@ -25,9 +36,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        stage.act();
+        stage.draw();
+        stage.setKeyboardFocus(console);
         batch.begin();
         batch.draw(mappingAssistant.drawmap(), 0,180);
-        batch.draw(textbox, 0,60);
+
         batch.end();
         // TODO Auto-generated method stub
     }
@@ -55,7 +69,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        textbox.dispose();
         // TODO Auto-generated method stub
     }
 }
