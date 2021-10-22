@@ -17,8 +17,10 @@ public class mapper {
     Texture corner_tiles_4 = new Texture("gamemap/Open_2_4.png");
     Texture exit_tile = new Texture("gamemap/Final.png");
 
+
     private static int posx = 1;
     private static int posy = 1;
+
 
     public static boolean check(String movement){
         if (posx==1 && movement.equals("LEFT")){

@@ -3,10 +3,10 @@ package com.wjjung24.zork;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import java.util.concurrent.TimeUnit;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,9 +23,29 @@ public class GameScreen implements Screen{
     Viewport viewport = new FitViewport(1080, 590);
     TextField console;
     Stage stage;
-    public String direction = "";
+    private String direction = "";
+
+    TextureAtlas textureAtlas;
+    Sprite sprite;
+    TextureRegion textureRegion;
+    private int currentframe = 1;
+    private final int MAX_FRAMES = 8;
+
+
+    public void moveright(){
+        currentframe++;
+        if (currentframe>MAX_FRAMES){
+            currentframe = 1;
+        sprite.setRegion(textureAtlas.findRegion(String.format("%04d", currentframe)));
+        }
+    }
 
     public GameScreen(){
+        batch = new SpriteBatch();
+        textureAtlas = new TextureAtlas(Gdx.files.internal("Character/data/sprite.atlas"));
+        textureRegion = textureAtlas.findRegion("0013");
+        sprite = new Sprite(textureRegion);
+        sprite.setPosition(100, 100);
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         console = new TextField("", skin);
         stage = new Stage(viewport);
@@ -39,6 +59,7 @@ public class GameScreen implements Screen{
                     direction=console.getText();
                     if (mapper.check(direction)){
                         mapper.update(direction);
+                        moveright();
                     }
                     console.setText("");
                     direction = "";
@@ -63,7 +84,7 @@ public class GameScreen implements Screen{
         stage.setKeyboardFocus(console);
         batch.begin();
         batch.draw(mappingAssistant.drawmap(), 0,50);
-
+        sprite.draw(batch);
         batch.end();
         // TODO Auto-generated method stub
     }
@@ -91,6 +112,7 @@ public class GameScreen implements Screen{
     @Override
     public void dispose() {
         batch.dispose();
+        stage.dispose();
         // TODO Auto-generated method stub
     }
 }

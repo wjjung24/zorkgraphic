@@ -20,7 +20,7 @@ public class Zork extends Game{
 	public final static int GAME = 1;
 	public final static int END = 2;
 
-	public void changeScreen(int screen){
+	public void changeScreen(int screen) {
 		switch(screen){
 			case MENU:
 				if(menuScreen == null) menuScreen = new MenuScreen();
