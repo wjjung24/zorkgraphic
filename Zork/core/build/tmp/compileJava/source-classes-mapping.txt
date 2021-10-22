@@ -12,3 +12,4 @@ com/wjjung24/zork/Zork.java
  com.wjjung24.zork.Zork
 com/wjjung24/zork/GameScreen.java
  com.wjjung24.zork.GameScreen
+ com.wjjung24.zork.GameScreen$1

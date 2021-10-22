@@ -1,11 +1,14 @@
 package com.wjjung24.zork;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,6 +23,7 @@ public class GameScreen implements Screen{
     Viewport viewport = new FitViewport(1080, 720);
     TextField console;
     Stage stage;
+    public String direction = "";
 
     public GameScreen(){
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -27,15 +31,27 @@ public class GameScreen implements Screen{
         stage = new Stage(viewport);
         console.setPosition(0, 0);
         stage.addActor(console);
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ENTER) {
+                    direction=console.getText();
+                }
+                return false;
+            }
+        });
         Gdx.input.setInputProcessor(stage);
     }
+
     @Override
     public void show() {
         // TODO Auto-generated method stub
     }
 
+
     @Override
     public void render(float delta) {
+
         stage.act();
         stage.draw();
         stage.setKeyboardFocus(console);
