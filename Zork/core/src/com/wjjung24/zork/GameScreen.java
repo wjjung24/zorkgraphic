@@ -24,9 +24,10 @@ public class GameScreen implements Screen{
     Viewport viewport = new FitViewport(1080, 590);
     TextField console;
     Stage stage;
-    private int FRAMES = 36;
     private String direction = "";
     private String state = "RIGHT";
+
+    GameManager gameManager = new GameManager();
 
 
     Animation animation;
@@ -38,6 +39,10 @@ public class GameScreen implements Screen{
     TextureRegion[] animationFrames_l= new TextureRegion[36];
     TextureRegion[] animationFrames_u= new TextureRegion[24];
     TextureRegion[] animationFrames_d= new TextureRegion[24];
+    TextureRegion[] animationFrames_d_halt = new TextureRegion[20];
+    TextureRegion[] animationFrames_u_halt = new TextureRegion[20];
+    TextureRegion[] animationFrames_l_halt = new TextureRegion[32];
+    TextureRegion[] animationFrames_r_halt = new TextureRegion[32];
 
     float elapsedTime;
 
@@ -61,8 +66,12 @@ public class GameScreen implements Screen{
         TextureRegion[][] tmpFrames_l = TextureRegion.split(leftsprite, 799, 102);
         TextureRegion[][] tmpFrames_u = TextureRegion.split(upsprite, 76, 540);
         TextureRegion[][] tmpFrames_d = TextureRegion.split(downsprite, 76, 540);
+        TextureRegion[][] tmpFrames_d_halt = TextureRegion.split(downsprite, 76, 540);
+        TextureRegion[][] tmpFrames_u_halt = TextureRegion.split(upsprite, 76, 540);
+        TextureRegion[][] tmpFrames_l_halt = TextureRegion.split(leftsprite, 799, 102);
+        TextureRegion[][] tmpFrames_r_halt = TextureRegion.split(rightsprite, 799, 102);
 
-        for (int i=0; i<FRAMES; i++){
+        for (int i=0; i<36; i++){
             animationFrames_r[i] = tmpFrames_r[i][0];
             animationFrames_l[i] = tmpFrames_l[i][0];
         }
@@ -72,6 +81,15 @@ public class GameScreen implements Screen{
             animationFrames_d[i] = tmpFrames_d[0][i];
         }
 
+        for (int i=0; i<20; i++){
+            animationFrames_d_halt[i] = tmpFrames_d_halt[0][i];
+            animationFrames_u_halt[i] = tmpFrames_u_halt[0][i];
+        }
+
+        for (int i=0; i<32; i++){
+            animationFrames_l_halt[i] = tmpFrames_l_halt[i][0];
+            animationFrames_r_halt[i] = tmpFrames_r_halt[i][0];
+        }
 
         animation = new Animation(1f/1f, animationFrames_r[0]);
 
@@ -85,22 +103,37 @@ public class GameScreen implements Screen{
                     if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN"))){
                         direction=console.getText();
                         state = console.getText();
+                        if (mappingAssistant.check(direction))
+                            gameManager.generator();
                     }
 
 
-                    if (mapper.check(direction)){
+                    if (mappingAssistant.check(direction)){
                         mappingAssistant.update(direction);
-                        if (direction.equals("LEFT")){
+                        gameManager.retrieve(mappingAssistant.posx, mappingAssistant.posy);
+                         if (direction.equals("LEFT")&& (gameManager.env == gameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_l);
                         }
-                        else if (direction.equals("UP")){
+                        else if ((direction.equals("LEFT")) && (gameManager.env != gameManager.blank)){
+                            animation = new Animation(1f/6f, animationFrames_l_halt);
+                        }
+                        else if (direction.equals("UP")&& (gameManager.env == gameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_u);
                         }
-                        else if (direction.equals("RIGHT")){
+                        else if ((direction.equals("UP")) && (gameManager.env != gameManager.blank)){
+                            animation = new Animation(1f/6f, animationFrames_u_halt);
+                        }
+                        else if (direction.equals("RIGHT")&& (gameManager.env == gameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_r);
                         }
-                        else if (direction.equals("DOWN")){
+                        else if ((direction.equals("RIGHT")) && (gameManager.env != gameManager.blank)){
+                            animation = new Animation(1f/6f, animationFrames_r_halt);
+                        }
+                        else if (direction.equals("DOWN")&& (gameManager.env == gameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_d);
+                        }
+                        else if ((direction.equals("DOWN")) && (gameManager.env != gameManager.blank)){
+                            animation = new Animation(1f/6f, animationFrames_d_halt);
                         }
                     }
 
@@ -133,25 +166,42 @@ public class GameScreen implements Screen{
 
         if ((state.equals("RIGHT") || state.equals("LEFT")) && animation.getKeyFrameIndex(elapsedTime) >=18)
             mappingAssistant.drawmap();
+
         if ((state.equals("UP") || state.equals("DOWN")) && animation.getKeyFrameIndex(elapsedTime) >=12)
             mappingAssistant.drawmap();
+
+        if ((state.equals("RIGHT") || state.equals("LEFT")) && (animation.getKeyFrameIndex(elapsedTime) >=18 || animation.getKeyFrameIndex(elapsedTime)==0))
+            batch.draw(gameManager.env, 360, 280);
+
+        if ((state.equals("UP") || state.equals("DOWN")) && (animation.getKeyFrameIndex(elapsedTime) >=12 || animation.getKeyFrameIndex(elapsedTime)==0))
+            batch.draw(gameManager.env, 360, 280);
+
 
         if(state.equals("RIGHT") || state.equals("LEFT"))
             batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 0, 280);
         else if(state.equals("UP") || state.equals("DOWN"))
             batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 350, 50);
+
         //System.out.println(animation.getKeyFrameIndex(elapsedTime));
         System.out.println(mappingAssistant.posx);
         System.out.println(mappingAssistant.posy);
         if (animation.isAnimationFinished(elapsedTime)){
-            if (state.equals("RIGHT"))
+             if (state.equals("RIGHT")&& gameManager.env == gameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_r[0]);
-            else if (state.equals("LEFT"))
+            else if (state.equals("RIGHT") && gameManager.env != gameManager.blank)
+                animation = new Animation(1f/1f, animationFrames_r_halt[31]);
+            else if (state.equals("LEFT")&& gameManager.env == gameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_l[0]);
-            else if (state.equals("UP"))
+            else if (state.equals("LEFT") && gameManager.env != gameManager.blank)
+                animation = new Animation(1f/1f, animationFrames_l_halt[31]);
+            else if (state.equals("UP")&& gameManager.env == gameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_u[0]);
-            else if (state.equals("DOWN"))
+            else if (state.equals("UP") && gameManager.env != gameManager.blank)
+                animation = new Animation(1f/1f, animationFrames_u_halt[19]);
+            else if (state.equals("DOWN")&& gameManager.env == gameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_d[0]);
+            else if (state.equals("DOWN") && gameManager.env != gameManager.blank)
+                animation = new Animation(1f/1f, animationFrames_d_halt[19]);
 
             elapsedTime=0;
             console.setDisabled(false);

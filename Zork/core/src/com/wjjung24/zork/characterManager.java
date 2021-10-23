@@ -70,7 +70,7 @@ public class characterManager extends Actor {
         super.draw(batch, parentAlpha);
 
         if(!isState())
-            batch .draw((TextureRegion) animation  .getKeyFrame(showTime, false), 0, 0);
+            batch .draw((TextureRegion) animation.getKeyFrame(showTime, false), 0, 0);
         else
             batch.draw((TextureRegion) animation2.getKeyFrame(showTime, true), 0, 0);
     }

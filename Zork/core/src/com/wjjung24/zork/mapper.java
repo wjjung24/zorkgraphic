@@ -18,11 +18,11 @@ public class mapper {
     Texture exit_tile = new Texture("gamemap/Final.png");
 
 
-    public static int posx = 1;
-    public static int posy = 1;
+    protected static int posx = 1;
+    protected static int posy = 1;
 
 
-    public static boolean check(String movement){
+    public boolean check(String movement){
         if (posx==1 && movement.equals("LEFT")){
             return false;
         }
@@ -40,7 +40,7 @@ public class mapper {
         }
     }
 
-    public static void update(String movement){
+    public void update(String movement){
 
         switch(movement){
             case "UP":
