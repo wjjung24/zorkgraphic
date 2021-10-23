@@ -4,6 +4,9 @@ import java.util.Random;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GameManager{
+    private boolean swordflag = false;
+    private boolean keyflag = false;
+    private boolean axeflag = false;
     Random rand = new Random();
 
     Texture boar = new Texture("env/enemy/boar3.png");
@@ -26,8 +29,9 @@ public class GameManager{
     public void generator(){
         int num = rand.nextInt(100);
         if (posx !=3 && posy!=3){
-            if (num<5){
+            if (num<5 && !keyflag){
                 env = key;
+                keyflag = true;
             }
             else if (num > 5 && num <=30){
                 if(rand.nextInt(100)<70){
@@ -41,11 +45,13 @@ public class GameManager{
                 env = boar;
             }
             else if (num > 55 && num < 75){
-                if (rand.nextInt(100)<50){
+                if (rand.nextInt(100)<50 && !swordflag){
                     env = sword;
+                    swordflag = true;
                 }
-                else{
+                else if (rand.nextInt(100)<50 && !axeflag){
                     env = axe;
+                    axeflag = true;
                 }
             }
         }

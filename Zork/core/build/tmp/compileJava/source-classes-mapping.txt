@@ -1,5 +1,5 @@
-com/wjjung24/zork/GameManager.java
- com.wjjung24.zork.GameManager
+com/wjjung24/zork/Zork.java
+ com.wjjung24.zork.Zork
 com/wjjung24/zork/characterManager.java
  com.wjjung24.zork.characterManager
 com/wjjung24/zork/LoadingScreen.java
@@ -10,8 +10,8 @@ com/wjjung24/zork/EndScreen.java
  com.wjjung24.zork.EndScreen
 com/wjjung24/zork/mapper.java
  com.wjjung24.zork.mapper
-com/wjjung24/zork/Zork.java
- com.wjjung24.zork.Zork
 com/wjjung24/zork/GameScreen.java
  com.wjjung24.zork.GameScreen
  com.wjjung24.zork.GameScreen$1
+com/wjjung24/zork/GameManager.java
+ com.wjjung24.zork.GameManager
