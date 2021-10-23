@@ -55,12 +55,12 @@ public class GameScreen implements Screen{
         rightsprite = new Texture("Character/images/right3.png");
         leftsprite = new Texture("Character/images/left2.png");
         upsprite = new Texture("Character/images/up2.png");
-        downsprite = new Texture("Character/images/down.png");
+        downsprite = new Texture("Character/images/down2.png");
 
         TextureRegion[][] tmpFrames_r = TextureRegion.split(rightsprite, 799, 102);
         TextureRegion[][] tmpFrames_l = TextureRegion.split(leftsprite, 799, 102);
         TextureRegion[][] tmpFrames_u = TextureRegion.split(upsprite, 76, 540);
-        TextureRegion[][] tmpFrames_d = TextureRegion.split(downsprite, 75, 540);
+        TextureRegion[][] tmpFrames_d = TextureRegion.split(downsprite, 76, 540);
 
         for (int i=0; i<FRAMES; i++){
             animationFrames_r[i] = tmpFrames_r[i][0];
@@ -69,6 +69,7 @@ public class GameScreen implements Screen{
 
         for (int i=0; i<24; i++){
             animationFrames_u[i] = tmpFrames_u[0][i];
+            animationFrames_d[i] = tmpFrames_d[0][i];
         }
 
 
