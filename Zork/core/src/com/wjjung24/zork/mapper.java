@@ -41,6 +41,7 @@ public class mapper {
     }
 
     public static void update(String movement){
+
         switch(movement){
             case "UP":
                 posy++;
