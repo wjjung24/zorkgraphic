@@ -18,8 +18,8 @@ public class mapper {
     Texture exit_tile = new Texture("gamemap/Final.png");
 
 
-    private static int posx = 1;
-    private static int posy = 1;
+    public static int posx = 1;
+    public static int posy = 1;
 
 
     public static boolean check(String movement){
@@ -56,36 +56,37 @@ public class mapper {
                 posx++;
         }
     }
-    public Texture drawmap(){
+    Texture gamemap = corner_tiles_3;
+    public void drawmap(){
         if (posx==3 && posy==3){
-            return exit_tile;
+            gamemap = exit_tile;
         }
         else if(posx==1 && posy==1){
-            return corner_tiles_3;
+            gamemap = corner_tiles_3;
         }
         else if(posx==1 && posy==5){
-            return corner_tiles_4;
+            gamemap = corner_tiles_4;
         }
         else if (posx==5 && posy==1){
-            return corner_tiles_2;
+            gamemap = corner_tiles_2;
         }
         else if (posx==5 && posy==5){
-            return corner_tiles_1;
+            gamemap = corner_tiles_1;
         }
         else if (posx==1){
-            return edge_tiles_1;
+            gamemap = edge_tiles_1;
         }
         else if (posx==5){
-            return edge_tiles_2;
+            gamemap = edge_tiles_2;
         }
         else if (posy==1){
-            return edge_tiles_4;
+            gamemap = edge_tiles_4;
         }
         else if (posy==5){
-            return edge_tiles_3;
+            gamemap = edge_tiles_3;
         }
         else{
-            return middle_tiles;
+            gamemap = middle_tiles;
         }
 
     }

@@ -2,6 +2,8 @@ package com.wjjung24.zork;
 
 import com.badlogic.gdx.*;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -24,6 +26,7 @@ public class GameScreen implements Screen{
     Stage stage;
     private int FRAMES = 36;
     private String direction = "";
+    private String state = "RIGHT";
 
 
     Animation animation;
@@ -64,39 +67,49 @@ public class GameScreen implements Screen{
             animationFrames_l[i] = tmpFrames_l[i][0];
         }
 
-        for (int i=0; i<23; i++){
+        for (int i=0; i<24; i++){
             animationFrames_u[i] = tmpFrames_u[0][i];
         }
 
 
-        animation = new Animation(1f/3f, animationFrames_u);
+        animation = new Animation(1f/1f, animationFrames_r[0]);
+
 
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ENTER) {
-                    direction=console.getText();
+                    console.setDisabled(true);
+
+                    if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN"))){
+                        direction=console.getText();
+                        state = console.getText();
+                    }
+
+
                     if (mapper.check(direction)){
-                        mapper.update(direction);
+                        mappingAssistant.update(direction);
                         if (direction.equals("LEFT")){
                             animation = new Animation(1f/6f, animationFrames_l);
                         }
                         else if (direction.equals("UP")){
-                            animation = new Animation(1f/3f, animationFrames_u);
+                            animation = new Animation(1f/6f, animationFrames_u);
                         }
                         else if (direction.equals("RIGHT")){
                             animation = new Animation(1f/6f, animationFrames_r);
                         }
                         else if (direction.equals("DOWN")){
-                            animation = new Animation(1f/3f, animationFrames_d);
+                            animation = new Animation(1f/6f, animationFrames_d);
                         }
                     }
+
                     console.setText("");
                     direction = "";
                 }
                 return false;
             }
-        });
+        }
+        );
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -114,8 +127,36 @@ public class GameScreen implements Screen{
         stage.draw();
         stage.setKeyboardFocus(console);
         batch.begin();
-        batch.draw(mappingAssistant.drawmap(), 0,50);
-        batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 0, 280);
+        batch.draw(mappingAssistant.gamemap, 0,50);
+
+
+        if ((state.equals("RIGHT") || state.equals("LEFT")) && animation.getKeyFrameIndex(elapsedTime) >=18)
+            mappingAssistant.drawmap();
+        if ((state.equals("UP") || state.equals("DOWN")) && animation.getKeyFrameIndex(elapsedTime) >=12)
+            mappingAssistant.drawmap();
+
+        if(state.equals("RIGHT") || state.equals("LEFT"))
+            batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 0, 280);
+        else if(state.equals("UP") || state.equals("DOWN"))
+            batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 350, 50);
+        //System.out.println(animation.getKeyFrameIndex(elapsedTime));
+        System.out.println(mappingAssistant.posx);
+        System.out.println(mappingAssistant.posy);
+        if (animation.isAnimationFinished(elapsedTime)){
+            if (state.equals("RIGHT"))
+                animation = new Animation(1f/1f, animationFrames_r[0]);
+            else if (state.equals("LEFT"))
+                animation = new Animation(1f/1f, animationFrames_l[0]);
+            else if (state.equals("UP"))
+                animation = new Animation(1f/1f, animationFrames_u[0]);
+            else if (state.equals("DOWN"))
+                animation = new Animation(1f/1f, animationFrames_d[0]);
+
+            elapsedTime=0;
+            console.setDisabled(false);
+
+        }
+
         batch.end();
         // TODO Auto-generated method stub
     }
