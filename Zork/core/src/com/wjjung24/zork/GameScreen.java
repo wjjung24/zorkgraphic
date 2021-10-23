@@ -17,12 +17,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameScreen implements Screen{
+public class GameScreen extends Game implements Screen{
+    @Override
+    public void create () {
+
+    }
+
+    private Zork game;
+    BitmapFont font = new BitmapFont(); //or use alex answer to use custom font
 
     mapper mappingAssistant = new mapper();
     SpriteBatch batch = new SpriteBatch();
     Viewport viewport = new FitViewport(1080, 590);
     TextField console;
+    FightScreen fightScreen = new FightScreen();
     Stage stage;
     private String direction = "";
     private String state = "RIGHT";
@@ -48,7 +56,8 @@ public class GameScreen implements Screen{
 
 
 
-    public GameScreen(){
+    public GameScreen(Zork parent){
+        this.game = parent;
         batch = new SpriteBatch();
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         console = new TextField("", skin);
@@ -98,20 +107,20 @@ public class GameScreen implements Screen{
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ENTER) {
-                    console.setDisabled(true);
 
                     if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN"))){
+                        console.setDisabled(true);
                         direction=console.getText();
                         state = console.getText();
-                        if (mappingAssistant.check(direction))
-                            gameManager.generator();
+
                     }
-
-
                     if (mappingAssistant.check(direction)){
                         mappingAssistant.update(direction);
-                        gameManager.retrieve(mappingAssistant.posx, mappingAssistant.posy);
-                         if (direction.equals("LEFT")&& (gameManager.env == gameManager.blank)){
+
+                        if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN"))){
+                        gameManager.generator();}
+
+                        if (direction.equals("LEFT")&& (gameManager.env == gameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_l);
                         }
                         else if ((direction.equals("LEFT")) && (gameManager.env != gameManager.blank)){
@@ -136,9 +145,47 @@ public class GameScreen implements Screen{
                             animation = new Animation(1f/6f, animationFrames_d_halt);
                         }
                     }
+                    if(gameManager.env == gameManager.key && console.getText().equals("PICK UP KEY")){
+                        gameManager.message = "You picked up the key! Now, find the room with the treasure chest!";
+                        gameManager.env = gameManager.blank;
+                        gameManager.hasKey = true;
+                    }
+                    else if(gameManager.env == gameManager.sword && console.getText().equals("PICK UP SWORD")){
+                        gameManager.message = "You picked up the sword! It may come in handy later, perhaps in a fight?";
+                        gameManager.env = gameManager.blank;
+                        gameManager.charWeapon = 0;
+                    }
+                    else if(gameManager.env == gameManager.axe && console.getText().equals("PICK UP AXE")){
+                        gameManager.message = "You picked up the axe! It may come in handy later, perhaps in a fight?";
+                        gameManager.charWeapon = 1;
+                        gameManager.env = gameManager.blank;
+
+                    }
+                    else if(gameManager.env == gameManager.apple && console.getText().equals("EAT")){
+                        gameManager.message = "You are feeling healthy!?";
+                        gameManager.env = gameManager.blank;
+
+                    }
+                    else if(gameManager.env == gameManager.meat && console.getText().equals("EAT")){
+                        gameManager.message = "You are feeling healthy!?";
+                        gameManager.env = gameManager.blank;
+
+                    }
+
+                    if(gameManager.env == gameManager.boar) {
+                        if (console.getText().equals("RUN AWAY")) {
+//                            gameManager.env = gameManager.blank;
+
+                        } else if (console.getText().equals("FIGHT")) {
+//                          game.setScreen(new FightScreen());
+//                            gameManager.env = gameManager.blank;
+
+                        }
+                    }
 
                     console.setText("");
                     direction = "";
+//                    gameManager.message = "";
                 }
                 return false;
             }
@@ -161,8 +208,10 @@ public class GameScreen implements Screen{
         stage.draw();
         stage.setKeyboardFocus(console);
         batch.begin();
-        batch.draw(mappingAssistant.gamemap, 0,50);
 
+        batch.draw(mappingAssistant.gamemap, 0,50);
+        System.out.println(gameManager.env);
+        System.out.println(gameManager.num);
 
         if ((state.equals("RIGHT") || state.equals("LEFT")) && animation.getKeyFrameIndex(elapsedTime) >=18)
             mappingAssistant.drawmap();
@@ -170,12 +219,15 @@ public class GameScreen implements Screen{
         if ((state.equals("UP") || state.equals("DOWN")) && animation.getKeyFrameIndex(elapsedTime) >=12)
             mappingAssistant.drawmap();
 
-        if ((state.equals("RIGHT") || state.equals("LEFT")) && (animation.getKeyFrameIndex(elapsedTime) >=18 || animation.getKeyFrameIndex(elapsedTime)==0))
+        if ((state.equals("RIGHT") || state.equals("LEFT")) && (animation.getKeyFrameIndex(elapsedTime) >=18 || animation.getKeyFrameIndex(elapsedTime)==0)){
             batch.draw(gameManager.env, 360, 280);
+            font.draw(batch, gameManager.message, 10, 75);
+        }
 
-        if ((state.equals("UP") || state.equals("DOWN")) && (animation.getKeyFrameIndex(elapsedTime) >=12 || animation.getKeyFrameIndex(elapsedTime)==0))
+        if ((state.equals("UP") || state.equals("DOWN")) && (animation.getKeyFrameIndex(elapsedTime) >=12 || animation.getKeyFrameIndex(elapsedTime)==0)) {
             batch.draw(gameManager.env, 360, 280);
-
+            font.draw(batch, gameManager.message, 10, 75);
+        }
 
         if(state.equals("RIGHT") || state.equals("LEFT"))
             batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 0, 280);

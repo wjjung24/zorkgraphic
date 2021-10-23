@@ -9,6 +9,13 @@ public class GameManager{
     private boolean axeflag = false;
     Random rand = new Random();
 
+    final int SWORD = 0;
+    final int AXE = 1;
+    final int NONE = 2;
+
+    int charWeapon = 2;
+    boolean hasKey = false;
+
     Texture boar = new Texture("env/enemy/boar3.png");
     Texture sword = new Texture("env/weapons/sword3.png");
     Texture axe = new Texture("env/weapons/axe3.png");
@@ -18,44 +25,55 @@ public class GameManager{
 
     Texture blank = new Texture("env/blank.png");
 
-    private int posx;
-    private int posy;
-    public void retrieve(int x, int y){
-        this.posx = x;
-        this.posy = y;
-    }
+    String message = "";
+    mapper mappingAssistant = new mapper();
 
+    int num;
+    int tmpnum;
     Texture env = blank;
     public void generator(){
-        int num = rand.nextInt(100);
-        if (posx !=3 && posy!=3){
-            if (num<5 && !keyflag){
-                env = key;
-                keyflag = true;
+        tmpnum = rand.nextInt(100);
+        if (mapper.posx ==3 && mapper.posy==3){
+            num = 100;
+        }
+        else{
+            num = rand.nextInt(100);
+        }
+        if (num<5 && !hasKey){
+            message = "YOU FOUND THE MAGICAL KEY! [Choices: PICK UP KEY]";
+            env = key;
+            keyflag = true;
+        }
+        else if (num > 5 && num <=30){
+            if(tmpnum<70){
+                message = "You found an apple! What do you do? [Choices: EAT]";
+
+                env = apple;
+//                    env = boar;
             }
-            else if (num > 5 && num <=30){
-                if(rand.nextInt(100)<70){
-                    env = apple;
-                }
-                else{
-                    env = meat;
-                }
+            else{
+                message = "You found some meat! What do you do? [Choices: EAT]";
+
+                env = meat;
+//                    env = boar;
             }
-            else if (num > 30 && num <= 55){
-                env = boar;
+        }
+        else if (num > 30 && num <= 55){
+            message = "A wild boar appeared! What do you do? [Choices: FIGHT/RUN AWAY]";
+            env = boar;
+        }
+        else if (num > 55 && num < 75){
+            if (tmpnum>50){
+                message = "You found a mystical sword! What do you do? [Choices: PICK UP SWORD]";
+                env = sword;
             }
-            else if (num > 55 && num < 75){
-                if (rand.nextInt(100)<50 && !swordflag){
-                    env = sword;
-                    swordflag = true;
-                }
-                else if (rand.nextInt(100)<50 && !axeflag){
-                    env = axe;
-                    axeflag = true;
-                }
+            else if (tmpnum<50){
+                message = "You found a viking's axe! What do you do? [Choices: PICK UP AXE]";
+                env = axe;
             }
         }
         else{
+            message = "";
             env = blank;
         }
     }
