@@ -4,6 +4,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 
 public class EndScreen implements Screen {
+
+    private Zork parent;
+    public EndScreen(Zork parentscreen){
+        parent = parentscreen;
+    }
     @Override
     public void show() {
         // TODO Auto-generated method stub

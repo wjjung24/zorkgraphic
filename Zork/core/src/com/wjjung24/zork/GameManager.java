@@ -4,34 +4,35 @@ import java.util.Random;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GameManager{
-    private boolean swordflag = false;
-    private boolean keyflag = false;
-    private boolean axeflag = false;
-    Random rand = new Random();
+    private static boolean swordflag = false;
+    private static boolean keyflag = false;
+    private static boolean axeflag = false;
+    static Random rand = new Random();
 
     final int SWORD = 0;
     final int AXE = 1;
     final int NONE = 2;
 
-    int charWeapon = 2;
-    boolean hasKey = false;
+    static int charWeapon = 0;
+    static boolean hasKey = false;
 
-    Texture boar = new Texture("env/enemy/boar3.png");
-    Texture sword = new Texture("env/weapons/sword3.png");
-    Texture axe = new Texture("env/weapons/axe3.png");
-    Texture apple = new Texture("env/food/apple3.png");
-    Texture meat = new Texture("env/food/meat3.png");
-    Texture key = new Texture("env/key3.png");
+    static int life = 5;
 
-    Texture blank = new Texture("env/blank.png");
+    static Texture boar = new Texture("env/enemy/boar3.png");
+    static Texture sword = new Texture("env/weapons/sword3.png");
+    static Texture axe = new Texture("env/weapons/axe3.png");
+    static Texture apple = new Texture("env/food/apple3.png");
+    static Texture meat = new Texture("env/food/meat3.png");
+    static Texture key = new Texture("env/key3.png");
 
-    String message = "";
-    mapper mappingAssistant = new mapper();
+    static Texture blank = new Texture("env/blank.png");
 
-    int num;
-    int tmpnum;
-    Texture env = blank;
-    public void generator(){
+    static String message = "";
+
+    static int num;
+    static int tmpnum;
+    static Texture env = blank;
+    public static void generator(){
         tmpnum = rand.nextInt(100);
         if (mapper.posx ==3 && mapper.posy==3){
             num = 100;
@@ -49,13 +50,13 @@ public class GameManager{
                 message = "You found an apple! What do you do? [Choices: EAT]";
 
                 env = apple;
-//                    env = boar;
+                    env = boar;
             }
             else{
                 message = "You found some meat! What do you do? [Choices: EAT]";
 
                 env = meat;
-//                    env = boar;
+                    env = boar;
             }
         }
         else if (num > 30 && num <= 55){

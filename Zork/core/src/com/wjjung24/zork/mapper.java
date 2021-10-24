@@ -6,23 +6,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.Objects;
 
 public class mapper {
-    Texture middle_tiles = new Texture("gamemap/Open_4.png");
-    Texture edge_tiles_1 = new Texture("gamemap/Open_3_1.png");
-    Texture edge_tiles_2 = new Texture("gamemap/Open_3_2.png");
-    Texture edge_tiles_3 = new Texture("gamemap/Open_3_3.png");
-    Texture edge_tiles_4 = new Texture("gamemap/Open_3_4.png");
-    Texture corner_tiles_1 = new Texture("gamemap/Open_2_1.png");
-    Texture corner_tiles_2 = new Texture("gamemap/Open_2_2.png");
-    Texture corner_tiles_3 = new Texture("gamemap/Open_2_3.png");
-    Texture corner_tiles_4 = new Texture("gamemap/Open_2_4.png");
-    Texture exit_tile = new Texture("gamemap/Final.png");
+    static Texture middle_tiles = new Texture("gamemap/Open_4.png");
+    static Texture edge_tiles_1 = new Texture("gamemap/Open_3_1.png");
+    static Texture edge_tiles_2 = new Texture("gamemap/Open_3_2.png");
+    static Texture edge_tiles_3 = new Texture("gamemap/Open_3_3.png");
+    static Texture edge_tiles_4 = new Texture("gamemap/Open_3_4.png");
+    static Texture corner_tiles_1 = new Texture("gamemap/Open_2_1.png");
+    static Texture corner_tiles_2 = new Texture("gamemap/Open_2_2.png");
+    static Texture corner_tiles_3 = new Texture("gamemap/Open_2_3.png");
+    static Texture corner_tiles_4 = new Texture("gamemap/Open_2_4.png");
+    static Texture exit_tile = new Texture("gamemap/Final.png");
 
 
     protected static int posx = 1;
     protected static int posy = 1;
 
 
-    public boolean check(String movement){
+    public static boolean check(String movement){
         if (posx==1 && movement.equals("LEFT")){
             return false;
         }
@@ -40,7 +40,7 @@ public class mapper {
         }
     }
 
-    public void update(String movement){
+    public static void update(String movement){
 
         switch(movement){
             case "UP":
@@ -56,8 +56,8 @@ public class mapper {
                 posx++;
         }
     }
-    Texture gamemap = corner_tiles_3;
-    public void drawmap(){
+    static Texture gamemap = corner_tiles_3;
+    public static void drawmap(){
         if (posx==3 && posy==3){
             gamemap = exit_tile;
         }

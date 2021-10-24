@@ -4,6 +4,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 
 public class MenuScreen implements Screen {
+    private Zork parent;
+    public MenuScreen(Zork parentscreen){
+        parent = parentscreen;
+    }
     @Override
     public void show() {
         // TODO Auto-generated method stub

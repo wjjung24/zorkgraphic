@@ -17,28 +17,29 @@ public class Zork extends Game{
 	private MenuScreen menuScreen;
 	private EndScreen endScreen;
 
-
 	public final static int MENU = 0;
 	public final static int GAME = 1;
 	public final static int FIGHT = 2;
 	public final static int END = 3;
 
+	int currentScreen = MENU;
+
 	public void changeScreen(int screen) {
 		switch(screen){
 			case MENU:
-				if(menuScreen == null) menuScreen = new MenuScreen();
+				if(menuScreen == null) menuScreen = new MenuScreen(this);
 				this.setScreen(menuScreen);
 				break;
 			case GAME:
-				if(gameScreen == null) gameScreen = new GameScreen(this);
+				gameScreen = new GameScreen(this);
 				this.setScreen(gameScreen);
 				break;
 			case FIGHT:
-				if (fightScreen == null) fightScreen = new FightScreen();
+				fightScreen = new FightScreen(this);
 				this.setScreen(fightScreen);
 				break;
 			case END:
-				if(endScreen == null) endScreen = new EndScreen();
+				if(endScreen == null) endScreen = new EndScreen(this);
 				this.setScreen(endScreen);
 				break;
 		}

@@ -17,25 +17,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameScreen extends Game implements Screen{
-    @Override
-    public void create () {
-
-    }
-
-    private Zork game;
+public class GameScreen  implements Screen{
+    private Zork parent;
     BitmapFont font = new BitmapFont(); //or use alex answer to use custom font
 
-    mapper mappingAssistant = new mapper();
     SpriteBatch batch = new SpriteBatch();
     Viewport viewport = new FitViewport(1080, 590);
     TextField console;
-    FightScreen fightScreen = new FightScreen();
+
     Stage stage;
     private String direction = "";
     private String state = "RIGHT";
 
-    GameManager gameManager = new GameManager();
 
 
     Animation animation;
@@ -43,6 +36,7 @@ public class GameScreen extends Game implements Screen{
     Texture upsprite;
     Texture downsprite;
     Texture leftsprite;
+    Texture heart = new Texture("heart2.png");
     TextureRegion[] animationFrames_r= new TextureRegion[36];
     TextureRegion[] animationFrames_l= new TextureRegion[36];
     TextureRegion[] animationFrames_u= new TextureRegion[24];
@@ -54,10 +48,8 @@ public class GameScreen extends Game implements Screen{
 
     float elapsedTime;
 
-
-
-    public GameScreen(Zork parent){
-        this.game = parent;
+    public GameScreen(Zork game){
+        parent = game;
         batch = new SpriteBatch();
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         console = new TextField("", skin);
@@ -65,11 +57,11 @@ public class GameScreen extends Game implements Screen{
         console.setSize(799, 50);
         stage = new Stage(viewport);
         stage.addActor(console);
-
         rightsprite = new Texture("Character/images/right3.png");
         leftsprite = new Texture("Character/images/left2.png");
         upsprite = new Texture("Character/images/up2.png");
         downsprite = new Texture("Character/images/down2.png");
+        parent.currentScreen = parent.GAME;
 
         TextureRegion[][] tmpFrames_r = TextureRegion.split(rightsprite, 799, 102);
         TextureRegion[][] tmpFrames_l = TextureRegion.split(leftsprite, 799, 102);
@@ -114,78 +106,90 @@ public class GameScreen extends Game implements Screen{
                         state = console.getText();
 
                     }
-                    if (mappingAssistant.check(direction)){
-                        mappingAssistant.update(direction);
+                    if (mapper.check(direction)){
+                        mapper.update(direction);
 
                         if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN"))){
-                        gameManager.generator();}
+                        GameManager.generator();}
 
-                        if (direction.equals("LEFT")&& (gameManager.env == gameManager.blank)){
+                        if (direction.equals("LEFT")&& (GameManager.env == GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_l);
                         }
-                        else if ((direction.equals("LEFT")) && (gameManager.env != gameManager.blank)){
+                        else if ((direction.equals("LEFT")) && (GameManager.env != GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_l_halt);
                         }
-                        else if (direction.equals("UP")&& (gameManager.env == gameManager.blank)){
+                        else if (direction.equals("UP")&& (GameManager.env == GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_u);
                         }
-                        else if ((direction.equals("UP")) && (gameManager.env != gameManager.blank)){
+                        else if ((direction.equals("UP")) && (GameManager.env != GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_u_halt);
                         }
-                        else if (direction.equals("RIGHT")&& (gameManager.env == gameManager.blank)){
+                        else if (direction.equals("RIGHT")&& (GameManager.env == GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_r);
                         }
-                        else if ((direction.equals("RIGHT")) && (gameManager.env != gameManager.blank)){
+                        else if ((direction.equals("RIGHT")) && (GameManager.env != GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_r_halt);
                         }
-                        else if (direction.equals("DOWN")&& (gameManager.env == gameManager.blank)){
+                        else if (direction.equals("DOWN")&& (GameManager.env == GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_d);
                         }
-                        else if ((direction.equals("DOWN")) && (gameManager.env != gameManager.blank)){
+                        else if ((direction.equals("DOWN")) && (GameManager.env != GameManager.blank)){
                             animation = new Animation(1f/6f, animationFrames_d_halt);
                         }
                     }
-                    if(gameManager.env == gameManager.key && console.getText().equals("PICK UP KEY")){
-                        gameManager.message = "You picked up the key! Now, find the room with the treasure chest!";
-                        gameManager.env = gameManager.blank;
-                        gameManager.hasKey = true;
+                    if(GameManager.env == GameManager.key && console.getText().equals("PICK UP KEY")){
+                        GameManager.message = "You picked up the key! Now, find the room with the treasure chest!";
+                        GameManager.env = GameManager.blank;
+                        GameManager.hasKey = true;
                     }
-                    else if(gameManager.env == gameManager.sword && console.getText().equals("PICK UP SWORD")){
-                        gameManager.message = "You picked up the sword! It may come in handy later, perhaps in a fight?";
-                        gameManager.env = gameManager.blank;
-                        gameManager.charWeapon = 0;
+                    else if(GameManager.env == GameManager.sword && console.getText().equals("PICK UP SWORD")){
+                        GameManager.message = "You picked up the sword! It may come in handy later, perhaps in a fight?";
+                        GameManager.env = GameManager.blank;
+                        GameManager.charWeapon = 0;
                     }
-                    else if(gameManager.env == gameManager.axe && console.getText().equals("PICK UP AXE")){
-                        gameManager.message = "You picked up the axe! It may come in handy later, perhaps in a fight?";
-                        gameManager.charWeapon = 1;
-                        gameManager.env = gameManager.blank;
+                    else if(GameManager.env == GameManager.axe && console.getText().equals("PICK UP AXE")){
+                        GameManager.message = "You picked up the axe! It may come in handy later, perhaps in a fight?";
+                        GameManager.charWeapon = 1;
+                        GameManager.env = GameManager.blank;
 
                     }
-                    else if(gameManager.env == gameManager.apple && console.getText().equals("EAT")){
-                        gameManager.message = "You are feeling healthy!?";
-                        gameManager.env = gameManager.blank;
+                    else if(GameManager.env == GameManager.apple && console.getText().equals("EAT")){
+                        if (GameManager.life == 5){
+                            GameManager.message = "You are already full on health!";
+                        }
+                        else{
+                            GameManager.life++;
+                            GameManager.message = "You are feeling healthy!";
+                        }
+                        GameManager.env = GameManager.blank;
 
                     }
-                    else if(gameManager.env == gameManager.meat && console.getText().equals("EAT")){
-                        gameManager.message = "You are feeling healthy!?";
-                        gameManager.env = gameManager.blank;
+                    else if(GameManager.env == GameManager.meat && console.getText().equals("EAT")){
+                        if (GameManager.life == 5){
+                            GameManager.message = "You are already full on health!";
+                        }
+                        else{
+                            GameManager.life = 5;
+                            GameManager.message = "You are feeling healthy!";
+                        }
+                        GameManager.env = GameManager.blank;
 
                     }
 
-                    if(gameManager.env == gameManager.boar) {
+                    if(GameManager.env == GameManager.boar) {
                         if (console.getText().equals("RUN AWAY")) {
-//                            gameManager.env = gameManager.blank;
+//                            GameManager.env = GameManager.blank;
 
                         } else if (console.getText().equals("FIGHT")) {
-//                          game.setScreen(new FightScreen());
-//                            gameManager.env = gameManager.blank;
+                            parent.changeScreen(Zork.FIGHT);
+//                            GameManager.env = GameManager.blank;
 
                         }
                     }
 
                     console.setText("");
                     direction = "";
-//                    gameManager.message = "";
+//                    GameManager.message = "";
                 }
                 return false;
             }
@@ -203,30 +207,33 @@ public class GameScreen extends Game implements Screen{
     @Override
     public void render(float delta) {
         elapsedTime += Gdx.graphics.getDeltaTime();
-
         stage.act();
         stage.draw();
         stage.setKeyboardFocus(console);
         batch.begin();
 
-        batch.draw(mappingAssistant.gamemap, 0,50);
-        System.out.println(gameManager.env);
-        System.out.println(gameManager.num);
+        batch.draw(mapper.gamemap, 0,50);
+//        System.out.println(GameManager.env);
+//        System.out.println(GameManager.num);
+
+        for (int i=0;i<GameManager.life;i++){
+            batch.draw(heart, 20+i*50, 520);
+        }
 
         if ((state.equals("RIGHT") || state.equals("LEFT")) && animation.getKeyFrameIndex(elapsedTime) >=18)
-            mappingAssistant.drawmap();
+            mapper.drawmap();
 
         if ((state.equals("UP") || state.equals("DOWN")) && animation.getKeyFrameIndex(elapsedTime) >=12)
-            mappingAssistant.drawmap();
+            mapper.drawmap();
 
         if ((state.equals("RIGHT") || state.equals("LEFT")) && (animation.getKeyFrameIndex(elapsedTime) >=18 || animation.getKeyFrameIndex(elapsedTime)==0)){
-            batch.draw(gameManager.env, 360, 280);
-            font.draw(batch, gameManager.message, 10, 75);
+            batch.draw(GameManager.env, 360, 280);
+            font.draw(batch, GameManager.message, 10, 75);
         }
 
         if ((state.equals("UP") || state.equals("DOWN")) && (animation.getKeyFrameIndex(elapsedTime) >=12 || animation.getKeyFrameIndex(elapsedTime)==0)) {
-            batch.draw(gameManager.env, 360, 280);
-            font.draw(batch, gameManager.message, 10, 75);
+            batch.draw(GameManager.env, 360, 280);
+            font.draw(batch, GameManager.message, 10, 75);
         }
 
         if(state.equals("RIGHT") || state.equals("LEFT"))
@@ -235,24 +242,24 @@ public class GameScreen extends Game implements Screen{
             batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 350, 50);
 
         //System.out.println(animation.getKeyFrameIndex(elapsedTime));
-        System.out.println(mappingAssistant.posx);
-        System.out.println(mappingAssistant.posy);
+        System.out.println(mapper.posx);
+        System.out.println(mapper.posy);
         if (animation.isAnimationFinished(elapsedTime)){
-             if (state.equals("RIGHT")&& gameManager.env == gameManager.blank)
+             if (state.equals("RIGHT")&& GameManager.env == GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_r[0]);
-            else if (state.equals("RIGHT") && gameManager.env != gameManager.blank)
+            else if (state.equals("RIGHT") && GameManager.env != GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_r_halt[31]);
-            else if (state.equals("LEFT")&& gameManager.env == gameManager.blank)
+            else if (state.equals("LEFT")&& GameManager.env == GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_l[0]);
-            else if (state.equals("LEFT") && gameManager.env != gameManager.blank)
+            else if (state.equals("LEFT") && GameManager.env != GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_l_halt[31]);
-            else if (state.equals("UP")&& gameManager.env == gameManager.blank)
+            else if (state.equals("UP")&& GameManager.env == GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_u[0]);
-            else if (state.equals("UP") && gameManager.env != gameManager.blank)
+            else if (state.equals("UP") && GameManager.env != GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_u_halt[19]);
-            else if (state.equals("DOWN")&& gameManager.env == gameManager.blank)
+            else if (state.equals("DOWN")&& GameManager.env == GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_d[0]);
-            else if (state.equals("DOWN") && gameManager.env != gameManager.blank)
+            else if (state.equals("DOWN") && GameManager.env != GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_d_halt[19]);
 
             elapsedTime=0;
