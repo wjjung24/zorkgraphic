@@ -1,19 +1,23 @@
 package com.wjjung24.zork;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
-
+import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GameManager{
     private static boolean swordflag = false;
-    private static boolean keyflag = false;
     private static boolean axeflag = false;
     static Random rand = new Random();
+
+    ArrayList<String> inventory = new ArrayList();
+    HashMap<String, Texture> itemsMatch = new HashMap<String, Texture>();
 
     final int SWORD = 0;
     final int AXE = 1;
     final int NONE = 2;
 
-    static int charWeapon = 0;
+    static int charWeapon = 2;
     static boolean hasKey = false;
 
     static int life = 5;
@@ -43,34 +47,39 @@ public class GameManager{
         if (num<5 && !hasKey){
             message = "YOU FOUND THE MAGICAL KEY! [Choices: PICK UP KEY]";
             env = key;
-            keyflag = true;
         }
-        else if (num > 5 && num <=30){
+        else if (num > 5 && num <=25){
             if(tmpnum<70){
                 message = "You found an apple! What do you do? [Choices: EAT]";
 
                 env = apple;
-                    env = boar;
+//                    env = boar;
             }
             else{
                 message = "You found some meat! What do you do? [Choices: EAT]";
 
                 env = meat;
-                    env = boar;
+//                    env = boar;
             }
         }
-        else if (num > 30 && num <= 55){
+        else if (num > 25 && num <= 60){
             message = "A wild boar appeared! What do you do? [Choices: FIGHT/RUN AWAY]";
             env = boar;
         }
-        else if (num > 55 && num < 75){
-            if (tmpnum>50){
+        else if (num > 60 && num < 80){
+            if (tmpnum>50 && !swordflag){
                 message = "You found a mystical sword! What do you do? [Choices: PICK UP SWORD]";
                 env = sword;
+                swordflag = true;
             }
-            else if (tmpnum<50){
+            else if (tmpnum<50 && !axeflag){
                 message = "You found a viking's axe! What do you do? [Choices: PICK UP AXE]";
                 env = axe;
+                axeflag = true;
+            }
+            else{
+                message = "";
+                env = blank;
             }
         }
         else{

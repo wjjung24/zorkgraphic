@@ -37,6 +37,7 @@ public class FightScreen implements Screen {
     int boar_life = 5;
     Texture heart = new Texture("heart2.png");
     Texture boar = new Texture("env/enemy/boar_enemy.png");
+    String hitStatus = "";
 
     Animation animation;
     Texture sword;
@@ -49,6 +50,7 @@ public class FightScreen implements Screen {
     TextureRegion[] animationFrames_boarvhand= new TextureRegion[13];
 
     boolean justentered = true;
+    boolean boarcaughtflag = false;
 
     int num;
 
@@ -60,13 +62,12 @@ public class FightScreen implements Screen {
         barehand = new Texture("Character/images/barehand.png");
         boarvsword = new Texture("Character/images/bvs.png");
         boarvhand = new Texture("Character/images/boarvshand.png");
-
         console = new TextField("", skin);
         console.setPosition(0, 0);
         console.setSize(799, 50);
         stage = new Stage(viewport);
         stage.addActor(console);
-        gameManager.message = "You start a fight with the boar. What do you do? [Choices: ATTACK/RUN AWAY]";
+        gameManager.message = "You start a fight with the boar. What do you do? If you run away, you might fail [Choices: ATTACK/RUN AWAY]";
 
         TextureRegion[][] tmpFrames_sword = TextureRegion.split(sword, 450, 280);
         TextureRegion[][] tmpFrames_barehand = TextureRegion.split(barehand, 450, 280);
@@ -91,29 +92,33 @@ public class FightScreen implements Screen {
           @Override
           public boolean keyDown(InputEvent event, int keycode) {
               if (keycode == Input.Keys.ENTER) {
-                  justentered = false;
-                  runcount = 0;
+
                   console.setDisabled(true);
                   num = rand.nextInt(100);
 
                   if(console.getText().equals("ATTACK")){
+                      runcount = 0;
+                      justentered = false;
+
                       elapsedTime = 0;
                       animation = new Animation(1f/15f, animationFrames_boarvsword);
                       if(gameManager.charWeapon == gameManager.SWORD){
                         animation = new Animation(1f/15f, animationFrames_boarvsword);
                         if (num<=20){
-                            gameManager.message = "MISS! Unlucky";
+                            hitStatus = "Miss! Unlucky...";
+                            gameManager.message = "MISS! Unlucky...";
                         }
                         else if (num>20 && num<70){
-                            boar_life -= 3;
 
-                            //boar_life--;
+                            boar_life--;
                             if(boar_life <= 0){
                                 gameManager.message = "You made it out alive!";
                                 gameManager.env = gameManager.blank;
                                 parent.changeScreen(Zork.GAME);
                             }
-                            gameManager.message = "Hit!";
+                            else{
+                            hitStatus = "Hit!";
+                            gameManager.message = "Hit!";}
                         }
                         else{
                             boar_life -= 3;
@@ -122,14 +127,18 @@ public class FightScreen implements Screen {
                                 gameManager.env = gameManager.blank;
                                 parent.changeScreen(Zork.GAME);
                             }
-                            gameManager.message = "Critical hit!";
+                            else{
+                            hitStatus = "Critical hit!";
+
+                            gameManager.message = "Critical hit!";}
                         }
                     }
                     else if(gameManager.charWeapon == gameManager.AXE){
                           elapsedTime = 0;
                           animation = new Animation(1f/15f, animationFrames_boarvsword);
                           if (num<=10){
-                              gameManager.message = "MISS! Unlucky";
+                              hitStatus = "Miss! Unlucky...";
+                              gameManager.message = "MISS! Unlucky...";
                           }
                           else if (num>10 && num<85){
                               boar_life--;
@@ -138,7 +147,9 @@ public class FightScreen implements Screen {
                                   gameManager.env = gameManager.blank;
                                   parent.changeScreen(Zork.GAME);
                               }
-                              gameManager.message = "Hit!";
+                              else{
+                              hitStatus = "Hit!";
+                              gameManager.message = "Hit!";}
                           }
                           else{
                               boar_life -= 3;
@@ -147,14 +158,18 @@ public class FightScreen implements Screen {
                                   gameManager.env = gameManager.blank;
                                   parent.changeScreen(Zork.GAME);
                               }
-                              gameManager.message = "Critical hit!";
+                              else {
+                              hitStatus = "Critical hit!";
+
+                              gameManager.message = "Critical hit!";}
                           }
                       }
                     else if (gameManager.charWeapon == gameManager.NONE){
                           elapsedTime = 0;
                           animation = new Animation(1f/13f, animationFrames_boarvhand);
                           if (num<=30){
-                              gameManager.message = "MISS! Unlucky";
+                              hitStatus = "Miss! Unlucky...";
+                              gameManager.message = "MISS! Unlucky...";
                           }
                           else if (num>30 && num<90){
                               boar_life--;
@@ -162,8 +177,9 @@ public class FightScreen implements Screen {
                                   gameManager.message = "You made it out alive!";
                                   gameManager.env = gameManager.blank;
                                   parent.changeScreen(Zork.GAME);
-                              }
-                              gameManager.message = "Hit!";
+                              }else{
+                              hitStatus = "Hit!";
+                              gameManager.message = "Hit!";}
                           }
                           else{
                               boar_life -= 3;
@@ -171,16 +187,26 @@ public class FightScreen implements Screen {
                                   gameManager.message = "You made it out alive!";
                                   gameManager.env = gameManager.blank;
                                   parent.changeScreen(Zork.GAME);
-                              }
-                              gameManager.message = "Critical hit!";
+                              }else{
+                              hitStatus = "Critical hit!";
+
+                              gameManager.message = "Critical hit!";}
                           }
                       }
                   }
-                  else if (console.getText() == "RUN AWAY"){
-                      if (num < 30){
-                          gameManager.message = "You failed to run away!";
-                          gameManager.life--;
+                  else if (console.getText().equals("RUN AWAY")){
+                      runcount = 0;
+                      justentered = false;
+                      if (num < 40){
+                          GameManager.message = "You failed to run away and the boar caught you! What do you do? [Choices: ATTACK/RUN AWAY]";
+                          boarcaughtflag = true;
                       }
+                          else{
+                          gameManager.env = gameManager.blank;
+                          gameManager.message = "You ran away successfully!";
+                          parent.changeScreen(Zork.GAME);
+                          }
+
                   }
                   console.setText("");
               }
@@ -196,13 +222,14 @@ public class FightScreen implements Screen {
             if(gameManager.life <= 0){
                 parent.changeScreen(Zork.END);
             }
-//            try {
-//                Thread.sleep(2000);
-//            }
-//            catch (InterruptedException e){
-//
-//            }
-            gameManager.message = "What do you do? [Choices: ATTACK/RUN AWAY]";
+            if (boarcaughtflag){
+                GameManager.message = "You failed to run away and the boar caught you! What do you do? [Choices: FIGHT/RUN AWAY]";
+                boarcaughtflag=false;
+            }
+            else{
+                GameManager.message = hitStatus + " What do you do? [Choices: FIGHT/RUN AWAY]";
+
+            }
         }
         runcount++;
     }
@@ -216,6 +243,7 @@ public class FightScreen implements Screen {
         stage.setKeyboardFocus(console);
         batch.draw(background, 0, 50);
         batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 120, 120);
+        System.out.println(num);
         for (int i=0;i<gameManager.life;i++){
             batch.draw(heart, 20+i*50, 520);
         }

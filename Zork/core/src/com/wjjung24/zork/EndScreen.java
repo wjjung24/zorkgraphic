@@ -1,5 +1,6 @@
 package com.wjjung24.zork;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 
@@ -16,7 +17,8 @@ public class EndScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // TODO Auto-generated method stub
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+
     }
 
     @Override

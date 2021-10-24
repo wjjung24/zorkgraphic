@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import java.util.Random;
 
 public class GameScreen  implements Screen{
     private Zork parent;
@@ -25,11 +26,12 @@ public class GameScreen  implements Screen{
     Viewport viewport = new FitViewport(1080, 590);
     TextField console;
 
+    Random rand = new Random();
     Stage stage;
     private String direction = "";
     private String state = "RIGHT";
 
-
+    int num;
 
     Animation animation;
     Texture rightsprite;
@@ -37,6 +39,7 @@ public class GameScreen  implements Screen{
     Texture downsprite;
     Texture leftsprite;
     Texture heart = new Texture("heart2.png");
+    Texture inventory = new Texture("inventory.png");
     TextureRegion[] animationFrames_r= new TextureRegion[36];
     TextureRegion[] animationFrames_l= new TextureRegion[36];
     TextureRegion[] animationFrames_u= new TextureRegion[24];
@@ -175,14 +178,25 @@ public class GameScreen  implements Screen{
                         GameManager.env = GameManager.blank;
 
                     }
-
+                    num = rand.nextInt(100);
                     if(GameManager.env == GameManager.boar) {
                         if (console.getText().equals("RUN AWAY")) {
-//                            GameManager.env = GameManager.blank;
+                            if (num < 40){
+                                GameManager.message = "You failed to run away and the boar caught you! What do you do? [Choices: FIGHT/RUN AWAY]";
+                                GameManager.life--;
+                                if(GameManager.life <= 0){
+                                    parent.changeScreen(Zork.END);
+                                }
+                            }
+                            else{
+                                GameManager.env = GameManager.blank;
+                                GameManager.message = "You ran away successfully!";
+
+                                parent.changeScreen(Zork.GAME);
+                            }
 
                         } else if (console.getText().equals("FIGHT")) {
                             parent.changeScreen(Zork.FIGHT);
-//                            GameManager.env = GameManager.blank;
 
                         }
                     }
@@ -213,12 +227,15 @@ public class GameScreen  implements Screen{
         batch.begin();
 
         batch.draw(mapper.gamemap, 0,50);
-//        System.out.println(GameManager.env);
-//        System.out.println(GameManager.num);
+        System.out.println(GameManager.env);
+        System.out.println(GameManager.num);
 
         for (int i=0;i<GameManager.life;i++){
             batch.draw(heart, 20+i*50, 520);
         }
+
+        batch.draw(inventory, 799, 5);
+
 
         if ((state.equals("RIGHT") || state.equals("LEFT")) && animation.getKeyFrameIndex(elapsedTime) >=18)
             mapper.drawmap();
@@ -231,7 +248,14 @@ public class GameScreen  implements Screen{
             font.draw(batch, GameManager.message, 10, 75);
         }
 
-        if ((state.equals("UP") || state.equals("DOWN")) && (animation.getKeyFrameIndex(elapsedTime) >=12 || animation.getKeyFrameIndex(elapsedTime)==0)) {
+        if (mapper.posx == 3 && mapper.posy == 3 && GameManager.hasKey == false){
+            GameManager.message = "You don't have a key yet... Come back later";
+        }
+        else if (mapper.posx == 3 && mapper.posy == 3 && GameManager.hasKey == true){
+            parent.changeScreen(parent.END);
+        }
+
+            if ((state.equals("UP") || state.equals("DOWN")) && (animation.getKeyFrameIndex(elapsedTime) >=12 || animation.getKeyFrameIndex(elapsedTime)==0)) {
             batch.draw(GameManager.env, 360, 280);
             font.draw(batch, GameManager.message, 10, 75);
         }
@@ -242,8 +266,8 @@ public class GameScreen  implements Screen{
             batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 350, 50);
 
         //System.out.println(animation.getKeyFrameIndex(elapsedTime));
-        System.out.println(mapper.posx);
-        System.out.println(mapper.posy);
+//        System.out.println(mapper.posx);
+//        System.out.println(mapper.posy);
         if (animation.isAnimationFinished(elapsedTime)){
              if (state.equals("RIGHT")&& GameManager.env == GameManager.blank)
                 animation = new Animation(1f/1f, animationFrames_r[0]);
