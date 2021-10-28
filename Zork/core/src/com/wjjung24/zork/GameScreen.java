@@ -187,7 +187,7 @@ public class GameScreen  implements Screen{
                     if(GameManager.env == GameManager.boar) {
                         if (console.getText().equals("RUN AWAY")) {
                             if (num < 40){
-                                GameManager.message = "You failed to run away and the boar caught you! What do you do? [Choices: FIGHT/RUN AWAY]";
+                                GameManager.message = "You failed to run away and the boar caught you! What do you do? [Choices: ATTACK/RUN AWAY]";
                                 GameManager.life--;
                                 if(GameManager.life <= 0){
                                     parent.changeScreen(Zork.END);
@@ -208,7 +208,7 @@ public class GameScreen  implements Screen{
 
                     console.setText("");
                     direction = "";
-//                    GameManager.message = "";
+                    //GameManager.message = "I did not understand that.";
                 }
                 return false;
             }

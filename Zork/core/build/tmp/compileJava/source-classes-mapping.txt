@@ -10,15 +10,15 @@ com/wjjung24/zork/LoadingScreen.java
  com.wjjung24.zork.LoadingScreen
 com/wjjung24/zork/MenuScreen.java
  com.wjjung24.zork.MenuScreen
-com/wjjung24/zork/Zork.java
- com.wjjung24.zork.Zork
-com/wjjung24/zork/FightScreen.java
- com.wjjung24.zork.FightScreen
- com.wjjung24.zork.FightScreen$1
-com/wjjung24/zork/GameScreen.java
- com.wjjung24.zork.GameScreen
- com.wjjung24.zork.GameScreen$1
 com/wjjung24/zork/GameManager.java
  com.wjjung24.zork.GameManager
  com.wjjung24.zork.GameManager$1
  com.wjjung24.zork.GameManager$2
+com/wjjung24/zork/FightScreen.java
+ com.wjjung24.zork.FightScreen
+ com.wjjung24.zork.FightScreen$1
+com/wjjung24/zork/Zork.java
+ com.wjjung24.zork.Zork
+com/wjjung24/zork/GameScreen.java
+ com.wjjung24.zork.GameScreen
+ com.wjjung24.zork.GameScreen$1

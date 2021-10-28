@@ -55,7 +55,7 @@ public class GameManager{
             message = "YOU FOUND THE MAGICAL KEY! [Choices: PICK UP KEY]";
             env = key;
         }
-        else if (num > 10 && num <=30){
+        else if (num > 10 && num <=35){
             if(tmpnum<70){
                 message = "You found an apple! What do you do? [Choices: EAT]";
 
@@ -69,7 +69,7 @@ public class GameManager{
 //                    env = boar;
             }
         }
-        else if (num > 30 && num <= 60){
+        else if (num > 35 && num <= 60){
             message = "A wild boar appeared! What do you do? [Choices: FIGHT/RUN AWAY]";
             env = boar;
         }
