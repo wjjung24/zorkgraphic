@@ -1,2 +1,0 @@
-com/wjjung24/zork/desktop/DesktopLauncher.java
- com.wjjung24.zork.desktop.DesktopLauncher
