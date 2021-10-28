@@ -19,6 +19,8 @@ public class GameManager{
     static weapons bareHand = new weapons(new Texture("env/weapons/hand.png"), "You don't have a weapon. \nChance of Critical Hit Low, \nChance of Miss Increased High");
     static weapons Key = new weapons(new Texture("env/key3.png"), "This is the magical key.\nTake it to the treasure room!");
 
+    public static boolean win = false;
+
     static HashMap<String, weapons> itemsMatch = new HashMap<String, weapons>(){{
         put("Sword", Sword);
         put("Axe", Axe);

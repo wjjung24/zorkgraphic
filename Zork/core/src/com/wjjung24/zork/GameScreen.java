@@ -265,7 +265,9 @@ public class GameScreen  implements Screen{
             GameManager.message = "You don't have a key yet... Come back later";
         }
         else if (mapper.posx == 3 && mapper.posy == 3 && GameManager.inventory.contains("Key")){
-            parent.changeScreen(parent.END);
+            GameManager.win = true;
+            if (animation.isAnimationFinished(elapsedTime))
+                parent.changeScreen(parent.END);
         }
 
             if ((state.equals("UP") || state.equals("DOWN")) && (animation.getKeyFrameIndex(elapsedTime) >=12 || animation.getKeyFrameIndex(elapsedTime)==0)) {
