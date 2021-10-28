@@ -103,16 +103,17 @@ public class GameScreen  implements Screen{
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ENTER) {
 
-                    if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN"))){
+                    if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN")) && GameManager.env != GameManager.boar){
                         console.setDisabled(true);
                         direction=console.getText();
                         state = console.getText();
 
                     }
                     if (mapper.check(direction)){
-                        mapper.update(direction);
+                        if(GameManager.env != GameManager.boar)
+                            mapper.update(direction);
 
-                        if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN"))){
+                        if (!console.getText().isEmpty() && (console.getText().equals("LEFT") || console.getText().equals("RIGHT") || console.getText().equals("UP") || console.getText().equals("DOWN")) && GameManager.env != GameManager.boar){
                         GameManager.generator();}
 
                         if (direction.equals("LEFT")&& (GameManager.env == GameManager.blank)){
@@ -143,16 +144,20 @@ public class GameScreen  implements Screen{
                     if(GameManager.env == GameManager.key && console.getText().equals("PICK UP KEY")){
                         GameManager.message = "You picked up the key! Now, find the room with the treasure chest!";
                         GameManager.env = GameManager.blank;
-                        GameManager.hasKey = true;
+                        GameManager.inventory.add("Key");
                     }
                     else if(GameManager.env == GameManager.sword && console.getText().equals("PICK UP SWORD")){
                         GameManager.message = "You picked up the sword! It may come in handy later, perhaps in a fight?";
                         GameManager.env = GameManager.blank;
-                        GameManager.charWeapon = 0;
+                        GameManager.inventory.add("Sword");
+                        GameManager.inventory.remove("Bare Hand");
+                        GameManager.inventory.remove("Axe");
                     }
                     else if(GameManager.env == GameManager.axe && console.getText().equals("PICK UP AXE")){
                         GameManager.message = "You picked up the axe! It may come in handy later, perhaps in a fight?";
-                        GameManager.charWeapon = 1;
+                        GameManager.inventory.add("Axe");
+                        GameManager.inventory.remove("Sword");
+                        GameManager.inventory.remove("Bare Hand");
                         GameManager.env = GameManager.blank;
 
                     }
@@ -236,6 +241,11 @@ public class GameScreen  implements Screen{
 
         batch.draw(inventory, 799, 5);
 
+        for (int i=0; i<GameManager.inventory.size(); i++) {
+            batch.draw(GameManager.itemsMatch.get(GameManager.inventory.get(i)).txtr, 830, 400 - i*170);
+            font.draw(batch, GameManager.itemsMatch.get(GameManager.inventory.get(i)).desc, 830, 380 - i*170);
+
+        }
 
         if ((state.equals("RIGHT") || state.equals("LEFT")) && animation.getKeyFrameIndex(elapsedTime) >=18)
             mapper.drawmap();
@@ -248,10 +258,10 @@ public class GameScreen  implements Screen{
             font.draw(batch, GameManager.message, 10, 75);
         }
 
-        if (mapper.posx == 3 && mapper.posy == 3 && GameManager.hasKey == false){
+        if (mapper.posx == 3 && mapper.posy == 3 && !GameManager.inventory.contains("Key")){
             GameManager.message = "You don't have a key yet... Come back later";
         }
-        else if (mapper.posx == 3 && mapper.posy == 3 && GameManager.hasKey == true){
+        else if (mapper.posx == 3 && mapper.posy == 3 && GameManager.inventory.contains("Key")){
             parent.changeScreen(parent.END);
         }
 

@@ -6,19 +6,26 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GameManager{
-    private static boolean swordflag = false;
-    private static boolean axeflag = false;
     static Random rand = new Random();
 
-    ArrayList<String> inventory = new ArrayList();
-    HashMap<String, Texture> itemsMatch = new HashMap<String, Texture>();
+    static ArrayList<String> inventory = new ArrayList(){
+        {
+            add("Bare Hand");
+        }
+    };
 
-    final int SWORD = 0;
-    final int AXE = 1;
-    final int NONE = 2;
+    static weapons Sword = new weapons(new Texture("env/weapons/sword3.png"), "This is a magical sword. \nChance of Critical Hit Increased 10%, \nChance of Miss Increased 10%");
+    static weapons Axe = new weapons(new Texture("env/weapons/axe3.png"), "This is a viking's axe. \nChance of Critical Hit Increased 5%, \nChance of Miss Decreased 5%");
+    static weapons bareHand = new weapons(new Texture("env/weapons/hand.png"), "You don't have a weapon. \nChance of Critical Hit Low, \nChance of Miss Increased High");
+    static weapons Key = new weapons(new Texture("env/key3.png"), "This is the magical key.\nTake it to the treasure room!");
 
-    static int charWeapon = 2;
-    static boolean hasKey = false;
+    static HashMap<String, weapons> itemsMatch = new HashMap<String, weapons>(){{
+        put("Sword", Sword);
+        put("Axe", Axe);
+        put("Bare Hand", bareHand);
+        put("Key", Key);
+    }};
+
 
     static int life = 5;
 
@@ -44,11 +51,11 @@ public class GameManager{
         else{
             num = rand.nextInt(100);
         }
-        if (num<5 && !hasKey){
+        if (num<10 && !inventory.contains("Key")){
             message = "YOU FOUND THE MAGICAL KEY! [Choices: PICK UP KEY]";
             env = key;
         }
-        else if (num > 5 && num <=25){
+        else if (num > 10 && num <=30){
             if(tmpnum<70){
                 message = "You found an apple! What do you do? [Choices: EAT]";
 
@@ -62,20 +69,18 @@ public class GameManager{
 //                    env = boar;
             }
         }
-        else if (num > 25 && num <= 60){
+        else if (num > 30 && num <= 60){
             message = "A wild boar appeared! What do you do? [Choices: FIGHT/RUN AWAY]";
             env = boar;
         }
-        else if (num > 60 && num < 80){
-            if (tmpnum>50 && !swordflag){
+        else if (num > 60 && num < 90){
+            if (tmpnum>50 && !GameManager.inventory.contains("Sword")){
                 message = "You found a mystical sword! What do you do? [Choices: PICK UP SWORD]";
                 env = sword;
-                swordflag = true;
             }
-            else if (tmpnum<50 && !axeflag){
+            else if (tmpnum<50 && !GameManager.inventory.contains("Axe")){
                 message = "You found a viking's axe! What do you do? [Choices: PICK UP AXE]";
                 env = axe;
-                axeflag = true;
             }
             else{
                 message = "";

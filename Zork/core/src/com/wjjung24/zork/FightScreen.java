@@ -102,7 +102,7 @@ public class FightScreen implements Screen {
 
                       elapsedTime = 0;
                       animation = new Animation(1f/15f, animationFrames_boarvsword);
-                      if(gameManager.charWeapon == gameManager.SWORD){
+                      if(gameManager.inventory.contains("Sword")){
                         animation = new Animation(1f/15f, animationFrames_boarvsword);
                         if (num<=20){
                             hitStatus = "Miss! Unlucky...";
@@ -133,7 +133,7 @@ public class FightScreen implements Screen {
                             gameManager.message = "Critical hit!";}
                         }
                     }
-                    else if(gameManager.charWeapon == gameManager.AXE){
+                    else if(gameManager.inventory.contains("Axe")){
                           elapsedTime = 0;
                           animation = new Animation(1f/15f, animationFrames_boarvsword);
                           if (num<=10){
@@ -164,7 +164,7 @@ public class FightScreen implements Screen {
                               gameManager.message = "Critical hit!";}
                           }
                       }
-                    else if (gameManager.charWeapon == gameManager.NONE){
+                    else if (gameManager.inventory.contains("Bare Hand")){
                           elapsedTime = 0;
                           animation = new Animation(1f/13f, animationFrames_boarvhand);
                           if (num<=30){
