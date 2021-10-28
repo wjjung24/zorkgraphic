@@ -15,6 +15,7 @@ public class EndScreen implements Screen {
 
     public EndScreen(Zork parentscreen){
         parent = parentscreen;
+        parent.currentScreen = parent.END;
     }
     @Override
     public void show() {
@@ -27,9 +28,10 @@ public class EndScreen implements Screen {
         batch.begin();
 
         if (GameManager.win)
-            batch.draw(win, 360, 280);
+            batch.draw(win, 0, 50);
         else
-            batch.draw(lose, 360,280 );
+            batch.draw(lose, 0,50);
+        batch.end();
 
     }
 

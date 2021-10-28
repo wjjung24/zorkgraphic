@@ -266,6 +266,7 @@ public class GameScreen  implements Screen{
         }
         else if (mapper.posx == 3 && mapper.posy == 3 && GameManager.inventory.contains("Key")){
             GameManager.win = true;
+            GameManager.message = "You found the key and the treasure chest!";
             if (animation.isAnimationFinished(elapsedTime))
                 parent.changeScreen(parent.END);
         }
