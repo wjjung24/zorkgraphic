@@ -6,11 +6,11 @@ import com.wjjung24.zork.Zork;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.resizable = false;
 		config.title = "Zork";
 		config.width = 1080;
 		config.height = 590;
-		new Lwjgl3Application(new Zork(), config);
+		new LwjglApplication(new Zork(), config);
 	}
 }
