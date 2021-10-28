@@ -42,7 +42,7 @@ public class GameScreen  implements Screen{
     Texture downsprite;
     Texture leftsprite;
     Texture heart = new Texture("heart2.png");
-    Texture inventory = new Texture("inventory.png");
+    Texture inventory = new Texture("Inventory.png");
     TextureRegion[] animationFrames_r= new TextureRegion[36];
     TextureRegion[] animationFrames_l= new TextureRegion[36];
     TextureRegion[] animationFrames_u= new TextureRegion[24];
