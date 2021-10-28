@@ -3,14 +3,25 @@ package com.wjjung24.zork;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class LoadingScreen implements Screen {
     private Zork parent;
-    Texture loading = new Texture("gamemap/Loading1.png");
+    Texture loading = new Texture("gamemap/LoadSprite.png");
     SpriteBatch batch = new SpriteBatch();
+    Animation animation;
+    TextureRegion[] animationFrames= new TextureRegion[4];
+
     public LoadingScreen(Zork parentscreen){
         parent = parentscreen;
+        TextureRegion[][] tmpFrames = TextureRegion.split(loading, 1080, 590);
+        for (int i=0; i<4; i++){
+            animationFrames[i] = tmpFrames[0][i];
+        }
+        animation = new Animation(1f/4f, animationFrames);
+
     }
     @Override
     public void show() {
@@ -21,11 +32,12 @@ public class LoadingScreen implements Screen {
     public void render(float delta) {
         elapsedTime += delta;
         batch.begin();
-        batch.draw(loading, 0, 50);
+        batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime, true), 0, 0);
 
         batch.end();
 
-        parent.changeScreen(parent.GAME);
+        if (elapsedTime > 3)
+            parent.changeScreen(parent.GAME);
     }
 
     @Override
